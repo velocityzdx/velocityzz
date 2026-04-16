@@ -106,11 +106,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const particleSlider = document.getElementById('particle-slider');
+        const particleDisplay = document.getElementById('particle-count-display');
         if (particleSlider) {
             particleSlider.value = particleCount;
+            if (particleDisplay) particleDisplay.textContent = particleCount;
             particleSlider.addEventListener('input', (e) => {
                 particleCount = parseInt(e.target.value);
                 updateParticleCount(particleCount);
+                if (particleDisplay) particleDisplay.textContent = particleCount;
             });
         }
 
