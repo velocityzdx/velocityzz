@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Animate count up from 0 to finalNumber
                 let current = 0;
-                let duration = 1500; // 1.5 seconds counting up
+                let duration = 2500; // 2.5 seconds counting up
                 let start = null;
                 
                 function step(timestamp) {
@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     let progress = (timestamp - start) / duration;
                     if (progress > 1) progress = 1;
                     
-                    // Ease out quadratic
-                    let easeOut = 1 - Math.pow(1 - progress, 3);
+                    // Smoother quartic ease-out
+                    let easeOut = 1 - Math.pow(1 - progress, 4);
                     
                     let currentVal = Math.floor(easeOut * finalNumber);
                     viewsElement.innerText = formatViews(currentVal);
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     viewsElement.parentElement.classList.remove('pop-up-anim');
                 }, 500);
-            }, 1200); // 1.2s is the duration of fallDownIntoVoid
+            }, 1800); // 1.8s is the duration of fallDownIntoVoid
         }
     }
 

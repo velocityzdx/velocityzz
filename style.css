@@ -293,7 +293,7 @@ body {
     color: rgba(255, 255, 255, 0.8);
     text-shadow: 0 0 30px var(--accent-glow);
     z-index: 10000;
-    animation: fallDownIntoVoid 1.2s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+    animation: fallDownIntoVoid 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     pointer-events: none;
 }
 
