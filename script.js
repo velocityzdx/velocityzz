@@ -137,7 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const enterText = enterScreen.querySelector('.enter-text');
             if (enterText) enterText.style.opacity = '0';
 
-            audio.volume = volumeSlider.value;
+            const targetVolume = parseFloat(volumeSlider.value);
+            audio.volume = 0;
             const playPromise = audio.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
@@ -145,6 +146,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     playPauseBtn.classList.remove('fa-play');
                     playPauseBtn.classList.add('fa-pause');
                     albumArt.classList.add('playing');
+                    
+                    let currentVol = 0;
+                    const fadeStep = targetVolume / 25;
+                    const fadeInterval = setInterval(() => {
+                        currentVol += fadeStep;
+                        if (currentVol >= targetVolume || currentVol >= 1) {
+                            audio.volume = targetVolume;
+                            clearInterval(fadeInterval);
+                        } else {
+                            audio.volume = currentVol;
+                        }
+                    }, 20);
                 }).catch(err => console.log('Autoplay blocked', err));
             }
 
@@ -283,17 +296,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function formatTime(seconds) {
-        if (isNaN(seconds)) return "0:00";
+        if (isNaN(seconds) || !isFinite(seconds)) return "0:00";
         let min = Math.floor(seconds / 60);
         let sec = Math.floor(seconds % 60);
         if (sec < 10) sec = '0' + sec;
         return min + ':' + sec;
     }
 
-    audio.addEventListener('loadedmetadata', () => {
-        totalTimeEl.textContent = formatTime(audio.duration);
-        seekSlider.max = Math.floor(audio.duration);
-    });
+    function updateAudioMeta() {
+        if (!isNaN(audio.duration) && isFinite(audio.duration)) {
+            totalTimeEl.textContent = formatTime(audio.duration);
+            seekSlider.max = Math.floor(audio.duration);
+        }
+    }
+
+    if (audio.readyState >= 1) {
+        updateAudioMeta();
+    } else {
+        audio.addEventListener('loadedmetadata', updateAudioMeta);
+        audio.addEventListener('durationchange', updateAudioMeta);
+    }
 
     audio.addEventListener('timeupdate', () => {
         if (!seekSlider.active) {
