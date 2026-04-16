@@ -45,13 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.vy = this.baseVy;
             }
             
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-                ctx.fill();
-            }
-            
             update() {
                 if (this.x + this.size > canvas.width || this.x - this.size < 0) {
                     this.baseVx = -this.baseVx;
@@ -82,8 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 this.x += this.vx;
                 this.y += this.vy;
-                
-                this.draw();
             }
         }
     
@@ -121,21 +112,37 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(animateParticles);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            
+            // Single batched path loop for absolute maximum performance capable of hitting 50k items
             for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                
-                for (let j = i; j < particles.length; j++) {
-                    let dx = particles[i].x - particles[j].x;
-                    let dy = particles[i].y - particles[j].y;
-                    let distance = Math.sqrt(dx*dx + dy*dy);
-                    
-                    if (distance < 120) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - distance/120) * 0.5})`;
-                        ctx.lineWidth = 1;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
+                let p = particles[i];
+                p.update();
+                // Because we batch, we do not draw isolated arcs.
+                // We physically jump the path pointer to each particle and stroke a micro-arc.
+                ctx.moveTo(p.x, p.y);
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            
+            // Connect lines ONLY if count is somewhat reasonable.
+            // 50,000 items creates 1.25 BILLION loop checks and instantly crashes memory.
+            if (particles.length <= 400) {
+                ctx.lineWidth = 1;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distance = Math.sqrt(dx*dx + dy*dy);
+                        
+                        if (distance < 120) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - distance/120) * 0.5})`;
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
                     }
                 }
             }
