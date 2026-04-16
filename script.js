@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const enterScreen = document.getElementById('enter-screen');
     const mainContent = document.getElementById('main-content');
     const typewriterElement = document.getElementById('typewriter');
     
@@ -129,28 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         animateParticles();
     }
 
-    // 1. Enter Screen logic
-    let hasEntered = false;
-    enterScreen.addEventListener('click', () => {
-        if (hasEntered) return;
-        hasEntered = true;
-        
-        enterScreen.style.opacity = '0';
-        setTimeout(() => {
-            enterScreen.style.display = 'none';
-            mainContent.style.display = 'flex';
-            
-            setTimeout(() => {
-                mainContent.style.opacity = '1';
-                startTypewriterText();
-                
-                // Trigger view counter animation & fetch AFTER entering
-                triggerViewCounter();
-                fetchDiscordData();
-                
-            }, 50);
-        }, 1000);
-    });
+    // 1. Initial Page Load Events
+    setTimeout(() => {
+        startTypewriterText();
+        triggerViewCounter();
+        fetchDiscordData();
+    }, 50);
     
     function startTypewriterText() {
         let i = 0;
