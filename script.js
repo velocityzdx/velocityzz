@@ -112,19 +112,20 @@ document.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(animateParticles);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            ctx.beginPath();
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
             
-            // Single batched path loop for absolute maximum performance capable of hitting 50k items
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
-                p.update();
-                // Because we batch, we do not draw isolated arcs.
-                // We physically jump the path pointer to each particle and stroke a micro-arc.
-                ctx.moveTo(p.x, p.y);
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            // WebKit path-limit batching (drops paths if over 64k entries)
+            const chunk = 1000;
+            for (let i = 0; i < particles.length; i += chunk) {
+                ctx.beginPath();
+                for (let j = i; j < i + chunk && j < particles.length; j++) {
+                    let p = particles[j];
+                    p.update();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                }
+                ctx.fill();
             }
-            ctx.fill();
             
             // Connect lines ONLY for a clamped number of particles to simulate the mesh network.
             // If we check all 50,000 against each other it creates 1.25 BILLION loop checks and instantly crashes memory.
