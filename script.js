@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canvas) {
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 150;
+        let particleCount = 150;
     
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -94,6 +94,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     
+        function updateParticleCount(newCount) {
+             if (newCount > particles.length) {
+                 const diff = newCount - particles.length;
+                 for(let i = 0; i < diff; i++) {
+                     particles.push(new Particle());
+                 }
+             } else if (newCount < particles.length) {
+                 particles.splice(newCount);
+             }
+        }
+
+        const particleSlider = document.getElementById('particle-slider');
+        if (particleSlider) {
+            particleSlider.value = particleCount;
+            particleSlider.addEventListener('input', (e) => {
+                particleCount = parseInt(e.target.value);
+                updateParticleCount(particleCount);
+            });
+        }
+
         function animateParticles() {
             requestAnimationFrame(animateParticles);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
