@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const enterScreen = document.getElementById('enter-screen');
     const mainContent = document.getElementById('main-content');
     const typewriterElement = document.getElementById('typewriter');
     
@@ -120,11 +121,46 @@ document.addEventListener('DOMContentLoaded', () => {
         animateParticles();
     }
 
-    setTimeout(() => {
-        startTypewriterText();
-        triggerViewCounter();
-        fetchDiscordData();
-    }, 50);
+    let hasEntered = false;
+
+    if (enterScreen) {
+        enterScreen.addEventListener('click', (e) => {
+            if (hasEntered) return;
+            hasEntered = true;
+
+            const ripple = document.createElement('div');
+            ripple.className = 'enter-ripple';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            enterScreen.appendChild(ripple);
+
+            const enterText = enterScreen.querySelector('.enter-text');
+            if (enterText) enterText.style.opacity = '0';
+
+            audio.volume = volumeSlider.value;
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    isPlaying = true;
+                    playPauseBtn.classList.remove('fa-play');
+                    playPauseBtn.classList.add('fa-pause');
+                    albumArt.classList.add('playing');
+                }).catch(err => console.log('Autoplay blocked', err));
+            }
+
+            setTimeout(() => {
+                enterScreen.style.opacity = '0';
+                enterScreen.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => {
+                    enterScreen.style.display = 'none';
+                    
+                    startTypewriterText();
+                    triggerViewCounter();
+                    fetchDiscordData();
+                }, 400); 
+            }, 500); 
+        });
+    }
     
     function startTypewriterText() {
         let i = 0;
@@ -303,19 +339,5 @@ document.addEventListener('DOMContentLoaded', () => {
             muteBtn.className = 'fa-solid fa-volume-high';
         }
     }
-
-    setTimeout(() => {
-        audio.volume = volumeSlider.value;
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-            playPromise.then(_ => {
-                isPlaying = true;
-                playPauseBtn.classList.remove('fa-play');
-                playPauseBtn.classList.add('fa-pause');
-                albumArt.classList.add('playing');
-            }).catch(error => {
-            });
-        }
-    }, 100);
 
 });
