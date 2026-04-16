@@ -4,43 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>velocity!!</title>
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- Background Elements -->
     <div class="bg-animation"></div>
     <canvas id="particle-canvas"></canvas>
-
-    <!-- Main Content Container -->
     <div class="content-wrapper" id="main-content">
         <div class="profile-card">
-            
             <div class="profile-header">
                 <div class="avatar-container">
-                    <img src="pfp.png" alt="Profile Picture" class="avatar">
+                    <img src="pfp.png" alt="" class="avatar">
                     <div class="status-indicator"></div>
                 </div>
             </div>
-
             <div class="profile-info">
                 <h1 class="display-name" id="typewriter"></h1>
                 <div class="badges">
-                    <i class="fa-brands fa-discord badge-icon" title="Discord"></i>
+                    <i class="fa-brands fa-discord badge-icon"></i>
                     <span class="username">velo.city_</span>
                 </div>
-                
                 <div class="divider"></div>
-                
                 <p class="bio">Мы все — бодибилдеры. Просто некоторые из нас строят тела похуже — например, я (•_•)--👉    &lt;3</p>
-                
                 <div class="social-links">
                     <a href="https://discord.gg/GcAErbMsdV" class="social-icon discord-icon" target="_blank" rel="noopener">
                         <i class="fa-brands fa-discord"></i>
@@ -55,13 +43,11 @@
                     </a>
                 </div>
             </div>
-            
             <div class="view-counter">
                 <i class="fa-solid fa-eye"></i> <span id="views">0</span>
             </div>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

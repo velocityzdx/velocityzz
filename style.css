@@ -26,7 +26,6 @@ body {
     align-items: center;
 }
 
-/* Background Animation */
 .bg-animation {
     position: absolute;
     top: 0;
@@ -53,7 +52,6 @@ body {
     z-index: 0;
 }
 
-/* Content Wrapper */
 .content-wrapper {
     transition: opacity 1.5s ease-in-out;
     width: 100%;
@@ -63,7 +61,6 @@ body {
     z-index: 10;
 }
 
-/* Glassmorphic Profile Card */
 .profile-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -87,7 +84,6 @@ body {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Avatar */
 .avatar-container {
     position: relative;
     margin-bottom: 1.5rem;
@@ -114,13 +110,12 @@ body {
     right: 5px;
     width: 18px;
     height: 18px;
-    background-color: #23a559; /* Online green */
+    background-color: #23a559;
     border-radius: 50%;
-    border: 3px solid #121216; /* matching card approx */
+    border: 3px solid #121216;
     box-shadow: 0 0 10px rgba(35, 165, 89, 0.5);
 }
 
-/* Info */
 .profile-info {
     text-align: center;
     width: 100%;
@@ -131,10 +126,9 @@ body {
     font-weight: 800;
     margin-bottom: 0.2rem;
     text-shadow: 0 0 15px rgba(255,255,255,0.2);
-    min-height: 2.8rem; /* to prevent layout shift during typing */
+    min-height: 2.8rem;
 }
 
-/* Typing cursor */
 .cursor {
     display: inline-block;
     width: 3px;
@@ -188,7 +182,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Social Links */
 .social-links {
     display: flex;
     justify-content: center;
@@ -210,7 +203,7 @@ body {
     border: 1px solid transparent;
 }
 
-/* Default Hover (for generic icons) */
+
 .social-icon:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-3px);
@@ -219,7 +212,6 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px var(--accent-glow);
 }
 
-/* Specific Platform Hovers */
 .social-icon.discord-icon:hover {
     color: #5865F2;
     border-color: rgba(88, 101, 242, 0.5);
@@ -238,7 +230,6 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
-/* View Counter */
 .view-counter {
     position: absolute;
     top: 20px;
