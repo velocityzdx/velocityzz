@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (canvas) {
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 30;
+        const particleCount = 80;
     
         function resizeCanvas() {
             canvas.width = window.innerWidth;
