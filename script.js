@@ -12,6 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewsElement = document.getElementById('views');
     const statusIndicator = document.querySelector('.status-indicator');
 
+    // Create Snowflakes
+    const snowContainer = document.getElementById('snowflakes-container');
+    for (let i = 0; i < 50; i++) {
+        let snowflake = document.createElement('div');
+        snowflake.className = 'snowflake';
+        
+        let size = Math.random() * 3 + 2; // 2px to 5px
+        snowflake.style.width = size + 'px';
+        snowflake.style.height = size + 'px';
+        snowflake.style.left = Math.random() * 100 + 'vw';
+        snowflake.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4s to 7s
+        snowflake.style.animationDelay = Math.random() * 5 + 's';
+        snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+        
+        // Random horizontal drift direction per flake
+        if(Math.random() < 0.5) snowflake.style.animationName = 'fallLeft';
+        
+        snowContainer.appendChild(snowflake);
+    }
+
     // 1. Enter Screen logic
     let hasEntered = false;
     enterScreen.addEventListener('click', () => {
