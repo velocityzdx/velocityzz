@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <video class="bg-video" autoplay loop muted playsinline src="carss.mov"></video>
+    <video class="bg-video" preload="auto" autoplay loop muted playsinline src="carss.mov"></video>
     <canvas id="particle-canvas"></canvas>
     <div class="content-wrapper" id="main-content">
         <div class="profile-card">
@@ -47,7 +47,34 @@
                 <i class="fa-solid fa-eye"></i> <span id="views">0</span>
             </div>
         </div>
+        
+        <!-- Music Player -->
+        <div class="music-player">
+            <img src="icon.png" alt="Album Icon" class="music-icon" id="album-art">
+            <div class="music-details">
+                <div class="music-track-info">
+                    <span class="music-title">audio.mp3</span>
+                    <div class="music-time">
+                        <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
+                    </div>
+                </div>
+                <div class="music-controls">
+                    <i class="fa-solid fa-play" id="play-pause-btn"></i>
+                    <input type="range" id="seek-slider" min="0" max="100" value="0">
+                </div>
+            </div>
+            <audio id="bg-audio" src="audio.mp3" loop preload="metadata"></audio>
+        </div>
     </div>
+
+    <!-- Volume Overlay Corner Control -->
+    <div class="glass-volume-ctl">
+        <i class="fa-solid fa-volume-high" id="global-mute-btn"></i>
+        <div class="volume-slider-container">
+            <input type="range" id="global-volume-slider" min="0" max="1" step="0.01" value="0.5">
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
