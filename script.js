@@ -126,23 +126,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             ctx.fill();
             
-            // Connect lines ONLY if count is somewhat reasonable.
-            // 50,000 items creates 1.25 BILLION loop checks and instantly crashes memory.
-            if (particles.length <= 400) {
-                ctx.lineWidth = 1;
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        let dx = particles[i].x - particles[j].x;
-                        let dy = particles[i].y - particles[j].y;
-                        let distance = Math.sqrt(dx*dx + dy*dy);
-                        
-                        if (distance < 120) {
-                            ctx.beginPath();
-                            ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - distance/120) * 0.5})`;
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
-                        }
+            // Connect lines ONLY for a clamped number of particles to simulate the mesh network.
+            // If we check all 50,000 against each other it creates 1.25 BILLION loop checks and instantly crashes memory.
+            ctx.lineWidth = 1;
+            const lineLimit = Math.min(particles.length, 300);
+            for (let i = 0; i < lineLimit; i++) {
+                for (let j = i + 1; j < lineLimit; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - distance/120) * 0.5})`;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
                     }
                 }
             }
