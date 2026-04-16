@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Config
     const textToType = "velocity!!";
     const typingSpeed = 100; // ms per char
-    const DISCORD_USER_ID = "YOUR_DISCORD_ID_HERE"; // Please replace with your numerical Discord ID!
+    const DISCORD_USER_ID = "1428576132793499650"; // User's numerical Discord ID
 
     // Elements
     const avatarImg = document.querySelector('.avatar');
