@@ -12,24 +12,121 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewsElement = document.getElementById('views');
     const statusIndicator = document.querySelector('.status-indicator');
 
-    // Create Snowflakes
-    const snowContainer = document.getElementById('snowflakes-container');
-    for (let i = 0; i < 50; i++) {
-        let snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
-        
-        let size = Math.random() * 3 + 2; // 2px to 5px
-        snowflake.style.width = size + 'px';
-        snowflake.style.height = size + 'px';
-        snowflake.style.left = Math.random() * 100 + 'vw';
-        snowflake.style.animationDuration = Math.random() * 3 + 4 + 's'; // 4s to 7s
-        snowflake.style.animationDelay = Math.random() * 5 + 's';
-        snowflake.style.opacity = Math.random() * 0.5 + 0.3;
-        
-        // Random horizontal drift direction per flake
-        if(Math.random() < 0.5) snowflake.style.animationName = 'fallLeft';
-        
-        snowContainer.appendChild(snowflake);
+    // Create Canvas Particles Constellation
+    const canvas = document.getElementById('particle-canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 30;
+    
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+    
+        const mouse = { x: null, y: null, radius: 150 };
+    
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+    
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.baseVx = (Math.random() - 0.5) * 1.5;
+                this.baseVy = (Math.random() - 0.5) * 1.5;
+                this.vx = this.baseVx;
+                this.vy = this.baseVy;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.fill();
+            }
+            
+            update() {
+                // Bounce off walls
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) {
+                    this.baseVx = -this.baseVx;
+                    this.vx = -this.vx;
+                }
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) {
+                    this.baseVy = -this.baseVy;
+                    this.vy = -this.vy;
+                }
+    
+                // Mouse interaction
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        
+                        // Push loosely AWAY from mouse
+                        this.vx -= forceDirectionX * force * 1.5;
+                        this.vy -= forceDirectionY * force * 1.5;
+                    }
+                }
+                
+                // Drag back to natural floating velocity
+                this.vx += (this.baseVx - this.vx) * 0.04;
+                this.vy += (this.baseVy - this.vy) * 0.04;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                this.draw();
+            }
+        }
+    
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+    
+        function animateParticles() {
+            requestAnimationFrame(animateParticles);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                
+                // Draw connecting lines
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${(1 - distance/120) * 0.5})`; // Max opacity 0.5
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        initParticles();
+        animateParticles();
     }
 
     // 1. Enter Screen logic
@@ -72,14 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(typeWriter, 500);
     }
 
-    // 2. View Counter Logic (Falling animation)
+    // 2. View Counter Logic
     function triggerViewCounter() {
-        // Animate falling fake number IMMEDIATELY so it always shows
-        const fallingNumber = document.createElement('div');
-        fallingNumber.className = 'falling-number';
-        fallingNumber.innerText = "0"; // The one before it pops up
-        document.body.appendChild(fallingNumber);
-
         fetch('https://api.counterapi.dev/v1/velocityzz/velocity_profile_views/up')
             .then(res => res.json())
             .then(data => {
@@ -92,17 +183,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
         function triggerPopUp(finalNumber) {
-            // Wait for it to fall down into the void
             setTimeout(() => {
-                if (document.body.contains(fallingNumber)) {
-                    fallingNumber.remove();
-                }
-                
                 // Now Pop Up the counter container
                 viewsElement.parentElement.classList.add('pop-up-anim');
                 
                 // Animate count up from 0 to finalNumber
-                let current = 0;
                 let duration = 2500; // 2.5 seconds counting up
                 let start = null;
                 
@@ -129,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     viewsElement.parentElement.classList.remove('pop-up-anim');
                 }, 500);
-            }, 1800); // 1.8s is the duration of fallDownIntoVoid
+            }, 500); // Small 500ms delay after page load to pop up
         }
     }
 
