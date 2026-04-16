@@ -54,33 +54,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. View Counter Logic (Falling animation)
     function triggerViewCounter() {
-        // Animate falling old/fake number IMMEDIATELY so it always shows
+        // Animate falling fake number IMMEDIATELY so it always shows
         const fallingNumber = document.createElement('div');
         fallingNumber.className = 'falling-number';
-        fallingNumber.innerText = "1,336"; // The one before it pops up
+        fallingNumber.innerText = "0"; // The one before it pops up
         document.body.appendChild(fallingNumber);
 
         fetch('https://api.counterapi.dev/v1/velocityzz/velocity_profile_views/up')
             .then(res => res.json())
             .then(data => {
                 const count = data.count || 1337;
-                triggerPopUp(formatViews(count));
+                triggerPopUp(count);
             })
             .catch(error => {
                 console.error("View counter failed", error);
-                triggerPopUp("1,337");
+                triggerPopUp(1337);
             });
             
-        function triggerPopUp(finalText) {
+        function triggerPopUp(finalNumber) {
             // Wait for it to fall down into the void
             setTimeout(() => {
                 if (document.body.contains(fallingNumber)) {
                     fallingNumber.remove();
                 }
                 
-                // Now Pop Up the new number in the counter
-                viewsElement.innerText = finalText;
+                // Now Pop Up the counter container
                 viewsElement.parentElement.classList.add('pop-up-anim');
+                
+                // Animate count up from 0 to finalNumber
+                let current = 0;
+                let duration = 1500; // 1.5 seconds counting up
+                let start = null;
+                
+                function step(timestamp) {
+                    if (!start) start = timestamp;
+                    let progress = (timestamp - start) / duration;
+                    if (progress > 1) progress = 1;
+                    
+                    // Ease out quadratic
+                    let easeOut = 1 - Math.pow(1 - progress, 3);
+                    
+                    let currentVal = Math.floor(easeOut * finalNumber);
+                    viewsElement.innerText = formatViews(currentVal);
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(step);
+                    } else {
+                        viewsElement.innerText = formatViews(finalNumber);
+                    }
+                }
+                
+                requestAnimationFrame(step);
                 
                 setTimeout(() => {
                     viewsElement.parentElement.classList.remove('pop-up-anim');
