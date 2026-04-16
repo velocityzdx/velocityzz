@@ -230,12 +230,32 @@ body {
     border: 1px solid transparent;
 }
 
+/* Default Hover (for generic icons) */
 .social-icon:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-3px);
     color: var(--accent);
     border-color: var(--accent-glow);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px var(--accent-glow);
+}
+
+/* Specific Platform Hovers */
+.social-icon.discord-icon:hover {
+    color: #5865F2;
+    border-color: rgba(88, 101, 242, 0.5);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(88, 101, 242, 0.6);
+}
+
+.social-icon.steam-icon:hover {
+    color: #66c0f4;
+    border-color: rgba(102, 192, 244, 0.5);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(102, 192, 244, 0.6);
+}
+
+.social-icon.roblox-icon:hover {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
 /* View Counter */
