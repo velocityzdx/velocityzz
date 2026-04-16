@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>velocity!!</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Enter Screen Overlay -->
+    <div id="enter-screen" class="enter-screen">
+        <h1 class="enter-text">[ click to enter ]</h1>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="bg-animation"></div>
+
+    <!-- Main Content Container -->
+    <div class="content-wrapper" id="main-content" style="display: none; opacity: 0;">
+        <div class="profile-card">
+            
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <img src="https://ui-avatars.com/api/?name=V&background=0D0D12&color=fff&size=128" alt="Profile Picture" class="avatar">
+                    <div class="status-indicator"></div>
+                </div>
+            </div>
+
+            <div class="profile-info">
+                <h1 class="display-name" id="typewriter"></h1>
+                <div class="badges">
+                    <i class="fa-brands fa-discord badge-icon" title="Discord"></i>
+                    <span class="username">velo.city_</span>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <p class="bio">Welcome to my space.</p>
+                
+                <div class="social-links">
+                    <a href="https://github.com/velocityzz" class="social-icon" target="_blank" rel="noopener">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="view-counter">
+                <i class="fa-solid fa-eye"></i> <span id="views">1,337</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
